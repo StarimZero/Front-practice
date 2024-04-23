@@ -22,6 +22,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter); // users 가 들어오면 usersrouter를 해라
 app.use('/book', require('./routes/book')); // 라우터를 등록한거임
+app.use('/local', require('./routes/local'));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
