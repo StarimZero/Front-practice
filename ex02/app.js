@@ -4,7 +4,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
-var indexRouter = require('./routes/index');
+var indexRouter = require('./routes/index'); //indexrouter는 라우티스의 인덱스다.
 var usersRouter = require('./routes/users');
 
 var app = express();
@@ -20,7 +20,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/users', usersRouter); // users 가 들어오면 usersrouter를 해라
+app.use('/book', require('./routes/book')); // 라우터를 등록한거임
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
