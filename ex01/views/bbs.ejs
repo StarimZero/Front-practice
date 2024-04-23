@@ -1,0 +1,31 @@
+<h1>Posts </h1>
+<div id = "posts"></div>
+</div>
+<script id = temp type="x-handlebars-template">
+    <table class="table table-dark table-striped">
+        {{#each .}}
+            <tr>
+                <td>{{id}}</td>
+                <td>{{title}}</td>
+                <td>{{body}}</td>
+            </tr>
+            <!-- <tr>
+                <td colspan=2>{{body}}</td>
+            </tr> -->
+        {{/each}}
+    </table>
+</script>
+
+<script>
+    getList();
+    function getList(){
+    fetch('https://jsonplaceholder.typicode.com/posts') //getlist라는 함수를 이용해서 다가져온것 -> 개발자도구에서 콘솔에서 보면 다보일것//
+        .then(response => response.json()) //fetch로 들고오고 그걸 response에 넣어준다. 이후 json으로 변환 -> json 에 100개의 데이터가 있다. //
+        .then(json => {
+            console.log(json)
+            const temp = Handlebars.compile($("#temp").html()); //아이뒤가 temp거를 html으로 컴파일해서(위에 템플릿은 html언어가아니니까) temp에 넣어주고
+            $("#posts").html(temp(json)); // 템플릿으로 만든거를 todos에 넣어줌.
+        });
+    }
+</script>
+

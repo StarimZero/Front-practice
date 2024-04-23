@@ -1,0 +1,81 @@
+<h1><%=title%></h1>
+<!-- <table id = "posts" class = "table table-striped"></table> -->
+<input id="name"><button id="out">출력</button>
+<div id = "posts"></div>
+<div style="text-align: center;">
+    <button id="prev" class = "btn btn-danger">이전</button>
+    <span id="page"></span>
+    <button id="next" class = "btn btn-success">다음</button>
+    
+    
+
+</div>
+<script>
+
+    $("#out").on("click", function(){
+        //const name=$("#name").val();
+        var name = document.getElementById("name").value
+        alert(name);
+    });
+
+    let page = 1;
+    // let size=10;
+    //다음버튼 클릭
+    $("#next").on("click", function(){
+        page++;
+        getList();
+    })
+    //이전버튼 클릭
+    $("#prev").on("click", function(){
+        page--;
+        getList();
+    })
+    getList();
+    function getList(){
+    fetch('https://jsonplaceholder.typicode.com/posts') //getlist라는 함수를 이용해서 다가져온것 -> 개발자도구에서 콘솔에서 보면 다보일것//
+        .then(response => response.json()) //fetch로 들고오고 그걸 response에 넣어준다. -> json 에 100개의 데이터가 있다. //
+        .then(json => {
+            console.log(json)
+            $("#page").html(`<b><u>${page}<b><u>`); // 제이쿼리는 자바스크립트를 쉽게 사용하도록 하는 것 -> 아이뒤가 page인 곳에 html값으로 page를 넣어라  page가 1이니까 1인값을 page에 넣으란 얘기임. text로하면 text자체가 나온다.
+            const total = json.length; //json의 총 길이 
+            const last = Math.ceil(total/10); // 올림하는 함수임. 
+            let start = (page - 1)*10 + 1;
+            let end = page * 10;
+
+            let str = ""; // 데이터초기화
+            str +=`<table class = "table table-striped table-hover">`;
+            $(json).each(function(){
+                const title = this.title;
+                const id = this.id;
+                if(id>=start && id<=end){
+                    str += `<tr>`;
+                    str += `<td>${id}</td>`;
+                    str += `<td>${title}</td>`;
+                    str += `</tr>`;
+                }
+            });
+            str += `</table>`;
+            $("#posts").html(str);
+            // $("#posts").html(""); //이동할때마다 html값을 없애고 다시 보니까 계속 누적해서 나오지 않음.
+            // $(json).each(function(){ //each는 json의 반복문 // json에에 100개가 들어 있는데 each=반복하겠다. 가져온 객체를 title, id 에 넣어라. 
+            //     const title = this.title;
+            //     const id = this.id;
+            //     if(id>=start && id<=end){
+            //         $("#posts").append(`<tr><td>${id} : ${title}</td></tr>`); //posts를 append하란얘기임. 
+            // // $("#posts").html(";;;;"); $는 jquery를 쓸껏 그래서 index에 넣어준거임.  이거 -> $  posts에 html로 json을 넣어준다.//
+            //     }
+                if(page==1){
+                    $("#prev").attr("disabled", true) //아이뒤가 prev인 놈의 attr(속성)을 바꾼다 -> disabled로 true일때 = true이다. 불가능하게 해라.
+                }else{
+                    $("#prev").attr("disabled", false)
+                }
+                if(page==last){
+                    $("#next").attr("disabled", true)
+                }else{
+                    $("#next").attr("disabled", false)
+                }
+            // });
+        });
+    }
+</script>
+

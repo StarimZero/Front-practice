@@ -1,0 +1,34 @@
+<h1><%=title%></h1>
+<div id = "books"></div>
+<!-- 도서목록 템플릿 만들기-->
+<script id="tempBooks" type="x-handlebars-template">
+    <div class = "row">
+        {{#each documents}}
+            <div class = "col-2 mb-2">
+                <img src={{thumbnail}}>
+                <div class ="ellipsis">{{title}}</div>
+                <div>{{price}}</div>
+                <div class ="ellipsis">{{datetime}}</div>
+                <div>{{publisher}}</div>
+            </div>
+        {{/each}}
+    </div>
+</script>
+
+<script>
+    $.ajax({ //제이쿼리에있는 ajax이라는게 있다. -> 페이자자체가 새로고침되지않고 데이터만 바꿔줌 //
+        type : "get", //데이터 가져오기
+        url : "https://dapi.kakao.com/v3/search/book?target=title", //어디서 가져오기
+        data : "json", //데이타 타입
+        headers : {"Authorization":"KakaoAK 89e3021ad2846184fd12b67daf705b0f"}, //데이터 키
+        data : {"query":"객관식", size:6}, //어떤거 검색할건지
+        success : function(data){ //성공했을때 액션
+            // alert("성공");
+            console.log(data);
+            const temp = Handlebars.compile($("#tempBooks").html());
+            $("#books").html(temp(data));
+        }
+    });
+</script>
+
+

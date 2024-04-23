@@ -1,0 +1,54 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbit&display=swap');
+
+  body {
+  padding: 50px;
+  font-family: "Orbit", sans-serif;
+  background-color: #eee
+  
+  }
+  *{
+  font-family: "Orbit", sans-serif;
+  }
+
+  a {
+  color: #00B7FF;
+  }
+
+  .divPage{ /*width를 주고 마진을 0px auto하면 가운데로온다 */
+  width: 960px;
+  margin: 0px auto;
+  }
+
+  .divBottom{
+  text-align: center;
+  }
+  
+  .divMenu .item{ /*그냥 띄어쓰기하면 AND 이다. ,는 or이다.*/
+    margin: 0px 10px; /*한개만 쓰면 모든면에 2개만 쓰면 위아래/왼오*/
+  }
+  
+  .divMenu {
+    margin: 20px 0px;
+  }
+  
+  .divHome{
+    margin: 50px 0px;
+    color: dodgerblue;
+  }
+
+  h1{
+    text-align: center;
+  }
+
+  .ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+}
+
+  .title{
+    font-size: 10px;
+    color: dodgerblue;
+  }
