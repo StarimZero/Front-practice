@@ -1,0 +1,123 @@
+<h1><%=title%></h1>
+<div class = "row mb-2">
+    <form action="" class = "col-7 col-md-5" name="frm"> <!-- 서버에 넘길 떄 name으로 넘어가는거 알지? 그러니까 form은 그냥 name으로 변수지정하는거임.-->
+        <div class = "input-group">
+            <input name="query" class = "form-control" placeholder="검색하실 블로그를 입력하세요 " value="평양냉면">
+            <button class = "btn btn-primary">검색</button>
+        </div>
+    </form>
+</div>
+   <!-- 하나의 row에 col이 2개나올것  -->
+<div id = "div_blog" class="row"></div>
+<script id = "temp_blog" type="x-handlebars-template"> 
+    {{#each documents}}
+        <div class = "row mb-3" url="{{url}}" style="cursor : pointer">
+            <div class = "col">
+                <div>{{{title}}}</div>
+                <div class ="ellipsis3">{{{contents}}}</div> <!-- 3개하면 태그 까지 반영해서 나온다.-->
+                <div class = "mt-2" style="font-size : 15px; color: red">
+                    <span>{{blogname}}</span>
+                    <span class="ms-3">{{fmtDate datetime}}</span>
+                </div>
+                </div>
+            <div class = "col">
+                <img src={{thumbnail}}>
+            </div>
+        </div>
+    {{/each}}
+</script>
+
+<div class = "text-center my-4"> <!-- my는 마진 y축이라는 뜻-->
+    <button class = "btn btn-primary" id = "prev">이전</button>
+    <span class = "mx-2" id = "page"><b>1</b></span> <!-- 같은줄에 하기위해 div아니고 span으로 한거임. -->
+    <button class = "btn btn-danger" id = "next">다음</button>
+</div>
+
+<script>
+    let query=$(frm.query).val(); // jquery는 name을 가져올때 쌩으로 쓴다.
+    let page = 1;
+    const size =50;
+    dataGet();
+    //row를 클릭했을때 
+    $("#div_blog").on("click", ".row", function(){
+        const url = $(this).attr("url");
+        window.open(url, '_black')
+    })
+
+
+    // //이미지클릭
+    // $("#div_blog").on("click", "img", function(){
+    // const url = $(this).data("url");
+    // window.open(url, '_blank'); // 새 창에서 열기
+    // //window.location.href = url; // 기존 창에서 열기
+    // });
+
+    $("#next").on("click", function(){//page를 1업하고 싶은데 page의 변수가 없으니 전역변수로 하나 설정해주자
+        page++;
+        dataGet();
+    });
+    $("#prev").on("click", function(){//page를 1업하고 싶은데 page의 변수가 없으니 전역변수로 하나 설정해주자
+        page--;
+        dataGet();
+    });
+
+
+    $(frm).on("submit", function(event){
+        event.preventDefault();
+        query = $(frm.query).val();
+        if(query == ""){
+            alert("검색어를 입력하세요");
+        }else{
+            page = 1;
+            dataGet();
+        }
+    });
+
+    function dataGet(){ //데이터를 가져오는 함수다.
+        $.ajax({
+            type:"get",
+            url:"https://dapi.kakao.com/v2/search/blog",
+            dataType:"json",
+            data:{query: query, size:size, page:page}, //어떤거 검색할건지
+            headers:{"Authorization":"KakaoAK 89e3021ad2846184fd12b67daf705b0f"},
+            success:function(data){
+                // alert("성공~");
+                console.log(data);
+                const temp = Handlebars.compile($("#temp_blog").html()); // tempBook 템플릿을 html형식으로 컴파일해서 temp에 넣어주기
+                $("#div_blog").html(temp(data)); //divBook에 컴파일한temp안에 데이터를 넣고 html형식의. 
+                const last = Math.ceil(data.meta.pageable_count/size);
+                $("#page").html(`<b>${page}/${last}</b>`);
+                if(page == 1){
+                    $("#prev").attr("disabled", true)
+                }else{
+                    $("#prev").attr("disabled", false)
+                }
+                if(data.meta.is_end){
+                    $("#next").attr("disabled", true)
+                }else{
+                    $("#next").attr("disabled", false)
+                }
+            }
+        });
+    }
+</script>
+
+
+<!-- 태그를 아에 적용하지않고 나오지 않게 할거면 strip title을 써라.
+<script>
+Handlebars.registerHelper('stripTags', function(title) {
+    return title.replace(/<[^>]+>/g, '');
+  });
+</script> -->
+
+<!-- 템플릿에는 함수나 뭐 사용할 수 없어서 헬퍼를 레지스터 해야한다. fmtDate는 함수이름이다.-->
+<script>
+    Handlebars.registerHelper('fmtDate', function(date){ //function(date)의 date는 datetime을 받아오는것이다.
+        const yy = date.substring(2,4); //0부터 4번앞에까지
+        const mm = date.substring(5,7);
+        const dd = date.substring(8,10);
+        const fmtdate = `${yy}년${mm}월${dd}일`
+        return fmtdate;
+        // return date.substr(0,10);
+    });
+</script>
