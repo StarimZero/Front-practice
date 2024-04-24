@@ -1,0 +1,44 @@
+<div class = "row my-5 justify-content-center">
+    <div class = "col-6">
+        <div class = "card">
+            <div class = "card-header text-center">
+                <h3 class = "py-2">로그인</h3>
+            </div>
+            <div class = "card-body">
+                <form action="" name = "frm">
+                    <input name = "uid" type="text" placeholder="아이디" class="form-control mb-3">
+                    <input name = "upass" type="password" placeholder="비밀번호" class="form-control mb-3">
+                    <button class = "btn btn-danger w-100">로그인</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(frm).on("submit", function(e){
+        e.preventDefault();
+        let uid = $(frm.uid).val();
+        let upass = $(frm.upass).val();
+        if(uid == "" || upass == ""){
+            alert("아이디 또는 비밀번호를 입력하세요.");
+            // return;
+        }else{//로그인체크
+            $.ajax({
+                type : "post", //post를찾아나선다.
+                url : "/login", // users/login이 아니다.
+                data : {uid, upass}, //키랑 변수랑같으면 생략가능
+                success : function(data){
+                    console.log('0');
+                   if(data.result == "0") {
+                    alert("아이디가 존재하지 않습니다.")
+                   }else if(data.result == "2"){
+                    alert("비밀번호가 맞지 않습니다.")
+                   }else{
+                    alert("로그인 성공");
+                   }
+                }
+            })
+        }
+    })
+</script>
