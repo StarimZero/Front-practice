@@ -18,7 +18,7 @@
 <script>
     $(frm).on("submit", function(e){
         e.preventDefault();
-        let uid = $(frm.uid).val();
+        let uid = $(frm.uid).val(); //frm에있는 uid를 받아서 val값을 uid변수에 저장하기
         let upass = $(frm.upass).val();
         if(uid == "" || upass == ""){
             alert("아이디 또는 비밀번호를 입력하세요.");
@@ -26,16 +26,18 @@
         }else{//로그인체크
             $.ajax({
                 type : "post", //post를찾아나선다.
-                url : "/login", // users/login이 아니다.
+                url : "/users/login", // users/login이 아니다. -> 원래 /login 이였는데(index.js에 있어서) users로 옮겼기 때문에 /users/login 가 됐다. 
                 data : {uid, upass}, //키랑 변수랑같으면 생략가능
-                success : function(data){
-                    console.log('0');
+                success : function(data){ //js에서 나온 결과가 data이다.  data는 변수다. 정해진것은 함수정의까지다. 
+                    console.log(data);
                    if(data.result == "0") {
                     alert("아이디가 존재하지 않습니다.")
                    }else if(data.result == "2"){
                     alert("비밀번호가 맞지 않습니다.")
                    }else{
                     alert("로그인 성공");
+                    sessionStorage.setItem('uid', uid); //uid를 uid의 변수에 저장
+                    location.href=('/'); //저장하고 장소를 이동한다. 루트로 
                    }
                 }
             })

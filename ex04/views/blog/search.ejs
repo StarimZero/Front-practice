@@ -7,20 +7,21 @@
         </div>
     </form>
 </div>
+<div id = "div_blog" style="width:100%; margin:0px auto;"></div>
    <!-- 하나의 row에 col이 2개나올것  -->
-<div id = "div_blog" class="row"></div>
+
 <script id = "temp_blog" type="x-handlebars-template"> 
     {{#each documents}}
-        <div class = "row mb-3" url="{{url}}" style="cursor : pointer">
-            <div class = "col">
+        <div class = "row mb-3" url="{{url}}" style="cursor : pointer;" >
+            <div class = "col-11">
                 <div>{{{title}}}</div>
-                <div class ="ellipsis3">{{{contents}}}</div> <!-- 3개하면 태그 까지 반영해서 나온다.-->
+                <div class ="ellipsis5">{{{contents}}}</div> <!-- 3개하면 태그 까지 반영해서 나온다.-->
                 <div class = "mt-2" style="font-size : 15px; color: red">
                     <span>{{blogname}}</span>
                     <span class="ms-3">{{fmtDate datetime}}</span>
                 </div>
-                </div>
-            <div class = "col">
+            </div>
+            <div class = "col-1" style = "text-align:right">
                 <img src={{thumbnail}}>
             </div>
         </div>
@@ -29,7 +30,6 @@
 
 <div class = "text-center my-4"> <!-- my는 마진 y축이라는 뜻-->
     <button class = "btn btn-primary" id = "prev">이전</button>
-    
     <span class = "mx-2" id = "page"><b>1</b></span> <!-- 같은줄에 하기위해 div아니고 span으로 한거임. -->
     <button class = "btn btn-danger" id = "next">다음</button>
 </div>
@@ -37,7 +37,7 @@
 <script>
     let query=$(frm.query).val(); // jquery는 name을 가져올때 쌩으로 쓴다.
     let page = 1;
-    const size =50;
+    const size =10;
     dataGet();
     //row를 클릭했을때 
     $("#div_blog").on("click", ".row", function(){

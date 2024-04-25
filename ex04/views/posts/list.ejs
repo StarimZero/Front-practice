@@ -1,0 +1,60 @@
+<h1><%=title%></h1>
+
+<div id="divPosts"></div> <!-- 밑에 스크립드들은 데이터출력을 위한 도구일뿐 결국 데이터는 여기에 들어오는것. -->
+<script id="tempPosts" type="x-handlebars-template"> 
+    <table class="table table-bordered table-dark" style ="text-align: center;">
+        <tr>
+            <td>번호</td><td>제목</td><td>작성자</td><td>작성일</td>
+        </tr>
+        {{#each .}}
+            <tr>
+                <td>{{pid}}</td>
+                <td><a href="/posts/read?pid={{pid}}" style = "text-decoration : none; color: white;">{{title}}</td></a>  <!-- 데이터가 넘어가는 링크를 걸어준다. -->
+                <td>{{writer}}</td>
+                <td>{{fdate}}</td>
+            </tr>
+        {{/each}}
+    </table>
+</script>
+
+<div class = "text-end mt-3" id="divWrite" style="display:none;">  <!-- 아무튼 div안에 넣어야 만지기가 편하다. -->
+    <a href="/posts/insert"><button class = "btn btn-secondary">글쓰기 </button></a> <!--누르면 a태그의 지정된 곳으로 가자 -->
+</div>
+
+<script> //ajax은 스크립트에서 쓴다.
+    dataGet();
+    function dataGet(){ //함수로 쓴이유는 여러번 해야하기때문에 
+        $.ajax({ //데이터 호출시 ajax을 함수로 쓴다. 
+            type:"get",
+            url:"/posts/list.json", // 로컬서버는 ~3000까지는 생략가능 
+            dataType:"json",
+            success:function(data){ //url의 데이터가 여기로 들어감 
+                // alert("성공~");
+                console.log(data);
+                const temp = Handlebars.compile($("#tempPosts").html()); //아이디가 tempPosts인걸 html로 compile해서 temp에 저장 
+                $("#divPosts").html(temp(data)); // temp에 data를 넣고  divPosts에 출력   
+            }
+        });
+    };
+</script>
+
+
+<script>
+    Handlebars.registerHelper('fmtDate', function(date){ //function(date)의 date는 datetime을 받아오는것이다.
+        const yy = date.substring(2,4); //0부터 4번앞에까지
+        const mm = date.substring(5,7);
+        const dd = date.substring(8,10);
+        const fmtdate = `${yy}년${mm}월${dd}일`
+        return fmtdate;
+        // return date.substr(0,10);
+    });
+</script>
+
+<script> //글쓰기 보이기 안보이기 아이템을 안가져와도 되는이유는 메뉴에서 이미 가져오기때문이다.  //기본으로 숨겨놓고 아이디가 있으면 보이고 없으면 숨기기 한것.
+    if(uid){
+        $("#divWrite").show();
+    }//그러니까 else가 사실 피료없다. 
+    // else{
+    //     $("#divWrite").hide();
+    // }
+</script>
