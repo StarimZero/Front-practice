@@ -1,0 +1,40 @@
+<h1><%=title%></h1>
+
+<form class = "p-5" name = "frm" method="post" action = "/posts/insert"> <!-- 패딩 5까지 가능 '''액션은 이동하고자하는 주소인데 같으면 생략가능 -->
+    <input name="uid" type="hidden"> <!-- 아이뒤를 받아와서 보이는창을 숨기기 -->
+    <input type="text" placeholder="제목을 쓰세요" class = 'form-control mb-3' name="title" >
+    <textarea class = "form-control" name="contents" cols="30" rows="12" placeholder="
+    질문글을 쓰는 회원님. 혹시 이 글을 작성하기전에 궁금하신 것에 대해 검색을 해보셨나요?
+    우리는 10년 이상의 시간을 쭉 이어져 오면서 여러 회원님들이 만들어놓은 방대한 정보가 카페에 있습니다.
+    물론 개개인의 문제에 맞는 답변을 다 맞추지는 못하지만, 이 글을 작성하시기 전에 한번 검색을 해주세요.
+    그래도 없다면 질문을 해주세요!
+    또한 자세하고 확실한 답변을 받고 싶다면 스크린샷 이미지, 데이터 등 더 자세한 정보를 질문에 포함하면 좋습니다.
+    여러분이 다는 질문 글에 간단한 댓글을 다는 일도 다른 회원들에겐 시간을 투자하는 일입니다.
+    그 분들의 정성이 헛되지 않게, 답변이 달린다면 꼭 감사합니다라는 말을 적어주시길 바랍니다.
+    마지막으로 답변이 달린 글을 삭제한다면 답변하신 분들을 오히려 무시하는 행위가 될 수 있으니
+    글 삭제는 삼가해 주시길 바랍니다. (상황에 따라 제재될 수 있습니다)">
+</textarea>
+
+<div class = "text-end mt-3">
+    <button type="submit" class = "btn btn-primary px-5">글쓰기</button> <!-- 경로 지정안하면 다시 posts/insert로 다시간다. px = 패딩x라서 뚱뚱해짐-->
+    <button type="reset" class = "btn btn-danger py-5">다시쓰기</button>
+</div>
+</form>
+<script>
+    $(frm.uid).val(uid); // 아이디를 불러오기 
+    $(frm).on("submit", function(e){
+        e.preventDefault();
+        const title=$(frm.title).val(); //frm에 있는 타이틀의 밸류를 가져오기 
+        const contents = $(frm.contents).val(); // frm에 있는 콘텐츠의 밸류를 가져오기 
+        if(title == "" || contents == ""){
+            alert("제목이나 내용이 없습니다.")
+        }else{
+            alert(`${uid}\n${title}\n${contents}`)
+            frm.submit(); //submit하면 위에 액션에서 지정한 곳으로 이동한다. 
+        }
+    });
+</script>
+
+
+
+

@@ -42,6 +42,7 @@
 <script>
     Handlebars.registerHelper('fmtDate', function(date){ //function(date)의 date는 datetime을 받아오는것이다.
         const yy = date.substring(2,4); //0부터 4번앞에까지
+        
         const mm = date.substring(5,7);
         const dd = date.substring(8,10);
         const fmtdate = `${yy}년${mm}월${dd}일`

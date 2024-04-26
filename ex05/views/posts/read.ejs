@@ -1,0 +1,38 @@
+<h1><%=title%></h1>
+<div class = "card">
+    <div class = "card-body">
+            <div><b>[<%=post.title%>]</b></div> 
+            <hr>
+            <div><%=post.contents%></div>
+            <br>
+        <div class = "card-footer" style="font-size:15px; color: red; text-align: center;">
+            <span>작성자 : <%=post.writer%></span>
+            <span class = "ms-3">작성일 : <%=post.pdate%></span>
+        </div>
+    </div>
+    <div class = "text-end mb-3 mr-3" id="buttons"> <!-- 여기에 아뒤를 주고 밑에는 그냥 클래스이름써도되고 아니면 다른 이름을써도된다.-->
+        <a href="/posts/update?pid=<%=post.pid%>"> <!-- 수정전에는 아무일도 일어나지 않을거기때문에 바로 업데이트페이지로 넘어가도된다. 밑에 삭제처럼 따로 작성하지 않고.-->
+            <button class = "btn btn-success btn-sm update">수정</button>
+        </a>
+    <button class = "btn btn-danger btn-sm delete">삭제</button>
+    </div>
+</div>
+
+<script> //uid는 로그인페이지에서 이미 지정을 해놨기 때문에 아무데서나 쓸수 있는거임. 그리고 post에서 불러온 작성자랑 비교를 해보자. 
+    const writer = "<%=post.writer%>";
+    if(uid == writer){
+        $("#buttons").show();
+    }else{
+        $("#buttons").hide();
+    }
+
+    // 삭제버튼을 눌렀을 경우
+    $("#buttons").on("click", ".delete", function(){ //아이디가 버튼스를 클릭했을떄, 어떤 버튼스? delete 클래스를 , 콜백함수를 실행하겠다. 
+        const pid = "<%=post.pid%>";
+        if(confirm(`${pid}번 게시글을 삭제하시겠습니까?`)){
+            //삭제할거면 true 안할거면 false다. 
+        }location.href="/posts/delete?pid=" + pid;  //이동은 location  pid를찍어서 넘겨주는거임 
+    });
+
+    
+</script>

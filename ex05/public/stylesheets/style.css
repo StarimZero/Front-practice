@@ -1,0 +1,54 @@
+@import url('https://fonts.googleapis.com/css2?family=Dongle&display=swap');
+
+* {
+    font-family:'강원교육모두'; 
+    
+    /* .dongle-regular {
+        font-family: "Dongle", sans-serif;
+        font-weight: 400;
+        font-style: normal;
+      }
+       */
+}
+
+.bottom{
+    text-align: center;
+    margin: 100px 0px;    
+    padding: 100px;
+}
+
+h1{
+    text-align: center;
+    padding: 20px;
+}
+
+.ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+}
+
+.ellipsis5 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 5;
+    -webkit-box-orient: vertical;
+}
+
+.title {
+    color: dodgerblue;
+    font-size: 17px;
+}
+
+#map{
+    width: 100%;
+    height: 800px;
+    border: 1px dotted gray;
+    border-radius: 20px;
+}
+
+
+

@@ -1,0 +1,86 @@
+<nav class="navbar navbar-expand-lg" style="background-color: #EEE;">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/"></a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarScroll">
+        <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="/">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/book">도서검색</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/blog">블로그 검색</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/image">이미지 검색하기</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/web">웹문서 검색</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/local">장소 검색</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/posts">자유게시판</a>
+          </li>
+          <!-- <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Link
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="#">Action</a></li>
+              <li><a class="dropdown-item" href="#">Another action</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="#">Something else here</a></li>
+            </ul>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link disabled" aria-disabled="true">Link</a>
+          </li> -->
+        </ul>
+
+        <ul class="navbar-nav my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
+          <li class="nav-item" id = "login">
+            <a class="nav-link active" aria-current="page" href="/users/login">로그인</a> <!-- users라고하면 원래 users에 있던거 (/) 가 실행된다. -->
+          </li>
+          <li class="nav-item" id = "myPage" style="display:none;">
+            <a class="nav-link active" aria-current="page" href="/users/mypage"></a> <!-- users라고하면 원래 users에 있던거 (/) 가 실행된다. -->
+          </li>
+          <li class="nav-item" id = "logout" style="display:none;">
+            <a class="nav-link active" aria-current="page" href="#">로그아웃</a> <!-- users라고하면 원래 users에 있던거 (/) 가 실행된다. -->
+          </li>
+        </ul>
+        <!-- <form class="d-flex" role="search">
+          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+          <button class="btn btn-outline-success" type="submit">Search</button>
+        </form> -->
+      </div>
+    </div>
+  </nav>
+
+  <script>  //메뉴에서 로그인 로그아웃 표시해주기 
+    const uid = sessionStorage.getItem('uid'); //세션의 값을 uid에서 꺼내왔다. 
+    // alert(uid);
+    if(uid){
+        $("#login").hide();
+        $("#logout").show();
+        $("#myPage").show();
+        $("#myPage a").html(uid); //myPage에 있는 a태그인걸 html로 로그인한 유저아이디를 넣어주겠다. 
+    }else{
+        $("#login").show();
+        $("#logout").hide();
+        $("#myPage").hide();
+    }
+    // 로그아웃 메뉴를 클릭할때 
+    $("#logout").on("click", "a", function(e){
+        e.preventDefault();
+        if(confirm("로그아웃 하시겠습니까?")){
+            sessionStorage.clear();
+            location.href="/"; //어디로 이동시킬거면 써라 이거없으면 로그아웃안되네..?
+        }
+    });
+  </script>
