@@ -12,19 +12,21 @@ router.get('/list.json', function (req, res) { //인자로 함수를 보내줄�
     const page = req.query.page; // 프론트에서 요청한 번호를 설정하기. 
     const size = parseInt(req.query.size);
     const start = (page-1) * size;
+    const query = "%" + req.query.query + "%";
     // const sql = 'select * from posts order by pid desc'; //여기를 쪼개서 데이터포맷을 줄 수 있다. 
     // const sql = 'select *, date_format(pdate, "%y-%m-%d %T") fdate from posts order by pid desc' //작따 안에 작따 들어가면 안됨. 이게 기본이다.
     // const sql = 'SELECT pid, title, contents, writer, DATE_FORMAT(pdate, '%y-%m-%d - %T') AS formatted_pdate FROM posts order by pid desc';
-    let sql = 'select *, date_format(pdate, "%y-%m-%d %T") fdate from posts order by pid desc limit ?, ?'; //이건 페이지 번호만들기 이거근데 const로 이어서작성은 안된다. 물음표 = 변수
-    db.get().query(sql, [start, size], function (err, rows) { //물음표2개니까 배열로 해야지 ㅎㅎㅎㅎㅎ
+    // let sql = 'select *, date_format(pdate, "%y-%m-%d %T") fdate from posts order by pid desc limit ?, ?'; //이건 페이지 번호만들기 이거근데 const로 이어서작성은 안된다. 물음표 = 변수
+    let sql = 'select *, date_format(pdate, "%y-%m-%d %T") fdate from posts where title like ? or contents like ? order by pid desc limit ?, ?';
+    db.get().query(sql, [query, query, start, size], function (err, rows) { //물음표2개니까 배열로 해야지 ㅎㅎㅎㅎㅎ
         // if (err) {
         //     console.log('게시판목록 : ', err);
         // } else {
         //     res.send(rows);
         // }
         const documents = rows; //목록이  documents로 들어가는거임.
-        sql = "select count(*) su from posts";
-        db.get().query(sql, function(err, rows){
+        sql = "select count(*) su from posts where title like ? or contents like ?";
+        db.get().query(sql, [query, query], function(err, rows){
             if(err){
                 console.log("카운트 정보 불러오기 오류")
             }

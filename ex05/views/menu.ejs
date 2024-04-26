@@ -48,7 +48,7 @@
             <a class="nav-link active" aria-current="page" href="/users/login">로그인</a> <!-- users라고하면 원래 users에 있던거 (/) 가 실행된다. -->
           </li>
           <li class="nav-item" id = "myPage" style="display:none;">
-            <a class="nav-link active" aria-current="page" href="/users/mypage"></a> <!-- users라고하면 원래 users에 있던거 (/) 가 실행된다. -->
+            <a class="nav-link active" aria-current="page" href="#"></a> <!-- users라고하면 원래 users에 있던거 (/) 가 실행된다. -->
           </li>
           <li class="nav-item" id = "logout" style="display:none;">
             <a class="nav-link active" aria-current="page" href="#">로그아웃</a> <!-- users라고하면 원래 users에 있던거 (/) 가 실행된다. -->
@@ -64,6 +64,20 @@
 
   <script>  //메뉴에서 로그인 로그아웃 표시해주기 
     const uid = sessionStorage.getItem('uid'); //세션의 값을 uid에서 꺼내왔다. 
+    $("#myPage").on("click", "a", function(e){
+      e.preventDefault();
+      location.href="/users/mypage?uid=" + uid;
+      // alert(uid);
+      // $.ajax({
+      //   type:"get",
+      //   url:"/users/mypage",
+      //   data:{uid},
+      //   success:function(data){
+      //     console.log(data);
+          
+      //   }
+      // });
+    });
     // alert(uid);
     if(uid){
         $("#login").hide();

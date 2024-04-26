@@ -1,0 +1,66 @@
+<h1><%=title%></h1>
+<style>
+    span{
+        width : 100px;
+        text-align: center;
+    }
+</style>
+<div class="row justify-content-center">
+    <div class="col-10 card">
+        <form class = "card-body" name="frm" method="post" action="/users/update">
+            <input type="hidden" name="uid" value="<%=user.uid%>">
+            <div class="input-group mb-2">
+                <span class="input-group-text">이름</span>
+                <input class="form-control" value="<%=user.uname%>" name="uname">
+            </div>
+            <div class="input-group mb-2">
+                <span class="input-group-text">전화번호</span>
+                <input class="form-control" type="text" value="<%=user.phone%>" name="phone">
+            </div>
+            <div class="input-group mb-2">
+                <span class="input-group-text">주소</span>
+                <input class="form-control" type="text" value="<%=user.add1%>" name="add1">
+                <button class="btn btn-secondary px-4" type="button" id="btn-search">주소 검색</button>
+
+            </div>
+            <div class="input-group mb-2">
+                <input class="form-control" type="text" placeholder="상세주소를 입력하세요 " value="<%=user.add2%>" name="add2">
+            </div>
+            <div class="text-end mt-3">
+                <button class="btn btn-primary" type="submit">수정</button>
+                <button class="btn btn-success" type="reset">취소</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js">//주소 검색API입니다.  
+</script> 
+<script>
+    $("#btn-search").on("click", function(){
+        new daum.Postcode({
+            oncomplete:function(data){
+                console.log(data);
+                const building=data.buildingName;
+                let address="";
+                if(building!=""){
+                    address=`${data.address}(${building})`
+                }else{
+                    address=data.address
+                }
+                $(frm.add1).val(address);
+            }
+        }).open();
+    });
+
+    $(frm).on("submit", function(e){
+        e.preventDefault();
+        if(confirm("정말 수정하시겠습니까?")){
+            frm.submit();
+        }
+    });
+</script>
+
+
+
+

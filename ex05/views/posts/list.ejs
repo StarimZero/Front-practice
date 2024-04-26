@@ -20,9 +20,19 @@
     </table>
 </script>
 
-
-<div class="text-end mt-3" id="divWrite" style="display:none;"> <!-- 아무튼 div안에 넣어야 만지기가 편하다. -->
-    <a href="/posts/insert"><button class="btn btn-secondary">글쓰기 </button></a> <!--누르면 a태그의 지정된 곳으로 가자 -->
+<div class = "row">
+    <div class = "col-4 col-md-4 mt-3"><!-- 중간이상 해상도일대는 4칸-->
+        <form action="" name="frm">
+            <div class="input-group">
+            <input type="text"class="form-control" placeholder="검색어를 입력하세요" name="query">
+            <button class="btn btn-primary">검색</button>
+            <span id="su" class="ps-3 pt-3"></span>
+            </div>
+        </form>
+    </div>
+    <div class="col text-end mt-3" id="divWrite" style="display:none;"> <!-- 아무튼 div안에 넣어야 만지기가 편하다. -->
+        <a href="/posts/insert"><button class="btn btn-secondary">글쓰기 </button></a> <!--누르면 a태그의 지정된 곳으로 가자 -->
+    </div>
 </div>
 <div class="text-center my-4"> <!-- my는 마진 y축이라는 뜻-->
     <button class="btn btn-primary" id="prev">이전</button>
@@ -32,23 +42,31 @@
 <script> //ajax은 스크립트에서 쓴다.
     let page = 1; //시작페이지설정해주기 
     const size =15;
+    let query="";
     dataGet();
     function dataGet() { //함수로 쓴이유는 여러번 해야하기때문에 
         $.ajax({ //데이터 호출시 ajax을 함수로 쓴다. 
             type: "get",
             url: "/posts/list.json", // 로컬서버는 ~3000까지는 생략가능 
             dataType: "json",
-            data: { page: page, size}, //page를 데이타로 넘겨주기 
+            data: {page, size, query}, //page를 데이타로 넘겨주기 
             success: function (data) { //url의 데이터가 여기로 들어감 
                 // alert("성공~");
                 console.log(data);
                 const temp = Handlebars.compile($("#tempPosts").html()); //아이디가 tempPosts인걸 html로 compile해서 temp에 저장 
                 $("#divPosts").html(temp(data)); // temp에 data를 넣고  divPosts에 출력   
-                $("#page").html(`<b>${page}`); //데이터 불러오기 성공을 하면 #page를 출력해라  이거없으면 번호가 가감이 안된다. 
-                if(page == 1){
+                $("#su").html(`<b>${data.su}<b>건이 검색되었습니다.`);
+                const last = Math.ceil(data.su/size); //last를 정의해주기(페이지/마지막페이지를 할려고)
+                $("#page").html(`<b>${page} / ${last}`); //데이터 불러오기 성공을 하면 #page를 출력해라  이거없으면 번호가 가감이 안된다. 
+                if(page == 1){ //1페이지일대 이전버튼안눌리게하기
                     $("#prev").attr("disabled", true)
                 }else{
                     $("#prev").attr("disabled", false)
+                }
+                if(page == last){ //마지막페이지가 다음안눌리게하기
+                    $("#next").attr("disabled", true)
+                }else{
+                    $("#next").attr("disabled", false)
                 }
             }
         });
@@ -65,6 +83,15 @@
     });
     $("#prev").on("click", function () {//page를 1업하고 싶은데 page의 변수가 없으니 전역변수로 하나 설정해주자
         page--;
+        dataGet();
+    });
+    
+    //검색창 submit안되게 하기
+    $(frm).on("submit", function(e){ //frm 이 submit이벤트를  function(e)에 넣어줌. 
+        e.preventDefault(); //e를 막아라.
+        query=$(frm.query).val();
+        // alert(query);
+        page=1;
         dataGet();
     });
 
