@@ -85,8 +85,19 @@ router.post('/delete', function(req, res){
 //도서정보 읽기
 router.get("/read/:bid", function(req, res){
     const bid = req.params.bid;
-    const sql = "select *, date_format(updatedate, '%Y-%m-%d %T') fmtdate from books where bid=?"
-    db.get().query(sql, [bid], function(err, rows){
+    const uid = req.query.uid;
+    
+    const sql = `
+    SELECT *,
+            DATE_FORMAT(regDate, '%Y-%m-%d') AS fmtdate,
+            FORMAT(price, 0) AS fmtprice,
+            (SELECT COUNT(*) FROM likes WHERE books.bid = likes.bid) AS lcnt,
+            (SELECT COUNT(*) FROM likes WHERE books.bid = likes.bid AND uid = ?) AS ucnt
+            FROM books
+            WHERE bid = ?
+            `;
+
+    db.get().query(sql, [uid, bid], function(err, rows){
         res.send(rows[0]);
     })
 })
@@ -138,7 +149,20 @@ router.post("/likes/insert", function(req, res){
     });
 });
 
-//좋아요 리스트
+//좋아요취소
+router.post("/likes/delete", function(req, res){
+    const uid = req.body.uid
+    const bid = req.body.bid
+    const sql = "delete from likes where uid=? and bid=?";
+    db.get().query(sql, [uid, bid], function(err, rows){
+        if(err){
+            console.log("err.........................", err)
+            res.send({result:0})
+        }else{
+            res.send({result:1})
+        }
+    })
+});
 
 
 module.exports = router;
