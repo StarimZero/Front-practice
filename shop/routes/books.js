@@ -52,7 +52,8 @@ router.get('/list', function(req, res){
     const uid = req.query.uid;
     let sql = "select *, date_format(regDate, '%Y-%m-%d %T') fmtdate, format(price, 0) fmtprice,"; 
         sql += " (select count(*) from likes where books.bid=likes.bid) lcnt,";
-        sql += " (select count(*) from likes where books.bid=likes.bid and uid=?) ucnt";
+        sql += " (select count(*) from likes where books.bid=likes.bid and uid=?) ucnt,";
+        sql += " (select count(*) from review where books.bid=review.bid) rcnt";
         sql += " from books";
         sql += ` where ${key} like '%${word}%'`;
         sql += " order by bid desc";
