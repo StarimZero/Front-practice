@@ -41,9 +41,72 @@ router.post("/insert", function(req,res){
 });
 
 
+//사용자별 주문목록
+router.get("/list", function(req, res){
+    const uid = req.query.uid;
+    let sql = "select *, date_format(pdate, '%Y-%m-%d %T') as fmtdate, format(sum,0) as fmtsum";
+        sql += " from purchase where uid=?";
+        sql += " order by pdate desc";
+    db.get().query(sql, [uid], function(err, rows){
+        if(err){
+            console.log("err->.........................", err)
+        }else{
+            res.send(rows)
+        }
+    })
+})
 
+//특정주문의 주문상품
+router.get('/books', function(req, res){
+    const pid = req.query.pid;
+    let sql = " select o.*, b.title, b.image, format(o.price, 0) fmtprice, format(o.price*o.qnt, 0) fmtsum";
+        sql += " from orders o, books b";
+        sql += " where o.bid=b.bid and pid =?";
+    db.get().query(sql, [pid], function(err, rows){
+        res.send(rows);
+    });
+});
 
+//모든주문의(관리자페이지) 주문상품, count구하기 
+router.get("/adlist", function(req, res){
+    const key = req.query.key;
+    const word = req.query.word;
+    const page = parseInt(req.query.page);
+    const size = parseInt(req.query.size);
+    let sql = " select *,date_format(pdate, '%Y-%m-%d %T') as fmtdate, format(sum,0) as fmtsum ";
+        sql += " from purchase";
+        sql += ` where ${key} like ?`;
+        sql += " order by pdate desc";
+        sql += " limit ?, ?";
+    db.get().query(sql,  [`%${word}%`, (page-1)*size, size], function(err, rows){
+        let documents = rows;
+        sql = "select count(*) count from purchase"
+        sql += ` where ${key} like ? `
+        db.get().query(sql, [`%${word}%`], function(err, rows){
+            const count = rows[0].count;
+            if(count===0){
+                res.send({documents:[], count});
+            }else{
+                res.send({documents, count});
+            }
+        });
+    });
+});
 
+//주문상태변경
+router.post("/status", function(req,res){
+    const pid = req.body.pid;
+    const status = req.body.status;
+    let sql = " update purchase set status = ? where pid=?";
+    db.get().query(sql, [status, pid], function(err, rows){
+        if(err){
+            console.log("err->>>>>>>>>>>>>>>>>>", err)
+            res.send({result:0})
+        }else{
+            res.send({result:1});
+        }
+    });
+});
 
 
 module.exports = router;
